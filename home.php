@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 //Normal array
 $normalArray = array('Jason','Freddy','Michael');
 
@@ -17,7 +19,6 @@ class strawberry{
 $fruit = new strawberry;
 
 
-
 //loops through the given numbers of items.(array1,array2 and object).
 for($i = 0; $i <= 3; $i++){
   if($i === 1){
@@ -34,12 +35,17 @@ for($i = 0; $i <= 3; $i++){
   }
 }
 
+$_SESSION['Normal array'] = $normalArray;
+$_SESSION['Associative array '] = $AssocArr;
+$_SESSION['Object'] = $fruit;
+
 
 //selects a number between 1 and 100, if below 20 we change something.
 if(rand(1,100<=20)){
   switch(rand(1,3)){
     case 1:
     $normalArray[array_rand($normalArray)] = "replaced";
+    $_SESSION['Normal array'] = $normalArray;
     break;
 
     case 2:
@@ -47,6 +53,7 @@ if(rand(1,100<=20)){
     $random = array_rand($AssocArr);
     //then uses the random key to select a random value inside the array and replace the word.
     $AssocArr[$random][array_rand($AssocArr[$random])] = "replaced";
+    $_SESSION['Associative array '] = $AssocArr;
     // [rand(0,$AssocArr)] = "replaced";
     break;
 
@@ -65,12 +72,15 @@ if(rand(1,100<=20)){
         $fruit->$key = $value;
     }
     
+    $_SESSION['Object'] = $fruit;
+
     break;
 
 
   }
 }
 
-  
+  echo'<br><pre>'.var_dump($_SESSION)."</pre>";
   echo '<pre>'.print_r($normalArray,true).'</br>'.print_r($AssocArr,true).'</br>'.print_r($fruit,true).'</br>'.'</pre>';
+  session_destroy();
 ?>
