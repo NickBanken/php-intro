@@ -13,12 +13,13 @@
 class Blackjack
 {
   public $score = 0;
+  public $hand = 0;
   public $turn = true;
   public $surr = false;
-
   function hit()
   {
     $card  = rand(1, 11);
+    $this->hand = $card;
     $this->score = $this->score + $card;
   }
 

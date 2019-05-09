@@ -34,9 +34,21 @@ session_start();
     <div class="row d-flex justify-content-center ">
       <div class="player col-md-6 mt-5">
         <h3 class="text-center">This is your score: <?php echo $_SESSION['player']->score ?></h3>
+        <ul class="d-flex justify-content-center">
+          <?php
+          foreach ($_SESSION['playerHand'] as $hand) {
+            echo '<li class="li m-4 text-center list-unstyled">' . $hand . '</li>';
+          } ?>
+        </ul>
       </div>
       <div class="computer col-md-6 mt-5">
         <h3 class="text-center">Computer score: <?php echo $_SESSION['dealer']->score ?></h3>
+        <ul class="d-flex justify-content-center">
+          <?php
+          foreach ($_SESSION['dealerHand'] as $hand) {
+            echo '<li class="li m-4 text-center list-unstyled">' . $hand . '</li>';
+          } ?>
+        </ul>
       </div>
     </div>
     <div class="row d-flex justify-content-center mt-5">
@@ -53,9 +65,6 @@ session_start();
 
     </div>
   </div>
-
-
-
 </body>
 
 </html>
@@ -67,22 +76,12 @@ if (!isset($_SESSION['player'])) {
 
 if (isset($_POST['restart'])) {
   resetAll();
-  $_SESSION['turn'] = true;
   header('location: game.php');
 }
 
-var_dump($_SESSION['player']->turn);
-var_dump($_SESSION['dealer']->score);
-
 if ($_SESSION['player']->turn === true) {
-  playerTurn();
-} elseif ($_SESSION['player']->turn === false) { }
-
-function playerTurn()
-{
-  $player = $_SESSION['player'];
   if (isset($_POST['hit'])) {
-    $player->hit();
+    $_SESSION['player']->hit();
     gameLogicPlayer();
     header('location: game.php');
   }
@@ -91,6 +90,7 @@ function playerTurn()
     $_SESSION['restart'] = "<button type='submit' name='restart' class='btn btn-danger'>restart</button>";
     while ($_SESSION['dealer']->score < 15) {
       gameLogicDealer();
+      array_push($_SESSION['dealerHand'], $_SESSION['dealer']->hand);
     }
     endresult();
     header('location: game.php');
@@ -102,35 +102,39 @@ function playerTurn()
 }
 
 
+//========================================================================================================
+//                                   All functions down here
+//========================================================================================================
+
 
 function gameLogicPlayer()
 {
-  $dealer = $_SESSION['dealer'];
-  $player = $_SESSION['player'];
+
+  array_push($_SESSION['playerHand'], $_SESSION['player']->hand);
   switch (true) {
-    case ($player->score < 10):
+    case ($_SESSION['player']->score < 10):
       $message = 'what will you pick?';
       $_SESSION['message'] = $message;
       break;
 
-    case ($player->score > 10 && $player->score < 16):
+    case ($_SESSION['player']->score > 10 && $_SESSION['player']->score < 16):
       $message = 'You are getting close now!';
       $_SESSION['message'] = $message;
       break;
 
-    case ($player->score > 16 && $player->score < 20):
+    case ($_SESSION['player']->score > 16 && $_SESSION['player']->score < 20):
       $message = "I'd stop if I were you.";
       $_SESSION['message'] = $message;
       break;
 
-    case ($player->score === 21):
+    case ($_SESSION['player']->score === 21):
       $message = "BLACK JACK!";
       $_SESSION['player']->stand();
       $_SESSION['message'] = $message;
       $_SESSION['restart'] = "<button type='submit' name='restart' class='btn btn-danger'>restart</button>";
       break;
 
-    case ($player->score > 21):
+    case ($_SESSION['player']->score > 21):
       $_SESSION['player']->stand();
       $message = 'The Dealer wins!';
       $_SESSION['message'] = $message;
@@ -141,13 +145,11 @@ function gameLogicPlayer()
 
 function endresult()
 {
-  $dealer = $_SESSION['dealer'];
-  $player = $_SESSION['player'];
-  if ($dealer->score >= $player->score && $dealer->score <= 21) {
+  if ($_SESSION['dealer']->score >= $_SESSION['player']->score && $_SESSION['dealer']->score <= 21) {
     $message = 'The Dealer wins!';
     $_SESSION['message'] = $message;
     $_SESSION['restart'] = "<button type='submit' name='restart' class='btn btn-danger'>restart</button>";
-  } elseif ($dealer->score < $player->score) {
+  } elseif ($_SESSION['dealer']->score < $_SESSION['player']->score || $_SESSION['dealer']->score > 21) {
     $message = "You win!";
     $_SESSION['message'] = $message;
   }
@@ -155,15 +157,9 @@ function endresult()
 
 function gameLogicDealer()
 {
-  switch (true) {
-    case ($_SESSION['dealer']->score < 15):
-      $_SESSION['dealer']->hit();
-      header('location: game.php');
-
-    case ($_SESSION['dealer']->score > 15):
-  }
+  $_SESSION['dealer']->hit();
+  header('location: game.php');
 }
-
 
 function startSession()
 {
@@ -172,9 +168,16 @@ function startSession()
   $message = "your turn!";
   $_SESSION['player'] = $player;
   $_SESSION['dealer'] = $dealer;
-
   $_SESSION['message'] = $message;
+  $_SESSION['playerHand'] = array();
+  $_SESSION['dealerHand'] = array();
   $_SESSION['restart'] = '';
+  $_SESSION['dealer']->hit();
+  array_push($_SESSION['dealerHand'], $_SESSION['dealer']->hand);
+  for ($i = 0; $i < 2; $i++) {
+    $_SESSION['player']->hit();
+    array_push($_SESSION['playerHand'], $_SESSION['player']->hand);
+  };
 }
 
 function resetAll()
