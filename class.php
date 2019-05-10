@@ -12,6 +12,7 @@
 
 class Blackjack
 {
+  public $totalScore = 0;
   public $score = 0;
   public $hand = 0;
   public $turn = true;
@@ -30,6 +31,6 @@ class Blackjack
 
   function surrender()
   {
-    $this->turn = true;
+    $this->surr = true;
   }
 }
