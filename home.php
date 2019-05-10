@@ -1,25 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Php-intro</title>
-
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-</head>
-
-<body>
-  <form action="game.php" method="POST">
-    <button type="submit" class="btn btn-primary">Play</button>
-  </form>
-
-</body>
-
-</html>
-
 <?php
 include 'class.php';
 session_start();
@@ -113,9 +91,100 @@ if (rand(1, 100 <= 20)) {
       break;
   }
 }
-//echo '<pre>' . print_R($_SESSION, true) . '</pre>';
-//echo '<pre>' . print_r($normalArray, true) . '</br>' . print_r($AssocArr, true) . '</br>' . print_r($fruit, true) . '</br>' . '</pre>';
-
-
 
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Php-intro</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+</head>
+
+<body class="bg-dark">
+  <div class="container">
+    <div class="row d-flex justify-content-center">
+      <form action="game.php" method="POST" class="m-5">
+        <button type="submit" class="btn btn-primary m-5">Play</button>
+      </form>
+      <div class="table-responsive">
+        <table class="table table-dark">
+          <thead>
+            <tr>
+              <th scope="col">Array:</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <?php foreach ($_SESSION['Normal array'] as $normalArray) {
+                echo '<td class="text-center">' . $normalArray . '</td>';
+              } ?>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-dark table-bordered">
+          <thead>
+            <tr>
+              <th scope="col-md-2">Associative array:</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+            foreach ($_SESSION['Associative array'] as $key => $value) {
+              echo '<tr><td><strong>' . $key . '</strong></td></rtr>';
+              foreach ($_SESSION['Associative array'][$key] as $name) {
+                echo '<td>' . $name . '</td>';
+              }
+            }
+            ?>
+            <td></td>
+            <td></td>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-dark">
+          <thead>
+            <tr>
+              <th scope="col">object:</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <?php
+              $fruitArray = (array)$_SESSION['Object'];
+              foreach ($fruitArray as $key => $fruit) {
+                echo '<th class="text-center">' . $key . '</th>';
+              } ?>
+            <tr>
+              <?php
+              foreach ($fruitArray as $key => $fruit) {
+                echo '<td class="text-center">' . $fruit . '</td>';
+              } ?>
+            </tr>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
