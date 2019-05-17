@@ -1,5 +1,6 @@
 <?php
 include 'class.php';
+session_destroy();
 session_start();
 
 
@@ -111,7 +112,7 @@ if (rand(1, 100 <= 20)) {
   <div class="container">
     <div class="row d-flex justify-content-center">
       <form action="game.php" method="POST" class="m-5">
-        <button type="submit" class="btn btn-primary m-5">Play</button>
+        <button type="submit" name="play" class="btn btn-primary m-5">Play</button>
       </form>
       <div class="table-responsive">
         <table class="table table-dark">

@@ -95,7 +95,7 @@ if (isset($_POST['restart'])) {
   header('location: game.php');
 }
 
-if (isset($_POST['reset'])) {
+if (isset($_POST['reset'])||isset($_POST['play'])) {
   startSession();
   header('location: game.php');
 }
