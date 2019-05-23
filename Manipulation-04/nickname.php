@@ -39,6 +39,13 @@
         }
 
 
+        
+
+        
+        
+        function generateNameGradient(){
+
+
         $color = ['red' => rand(0,255), 'green' => rand(0,255), 'blue'=> rand(0,255)];
         
         $decRed = false;
@@ -47,32 +54,61 @@
     
         $decBlue = false;
 
-        foreach($color as $key => $value){
-            if($key != 'blue'){
-                echo $value.',';}
-                else{
-                    echo $value;}
-                }
+        $power = 8;
+
+        global $complete;
 
         $splitted = str_split($complete);
-        for ($i=0,$c=strlen($addBrackets);$i<$c;$i++){
-            echo '<span style="color:rgb('.foreach($color as $key => $value){}.');">'.$splitted[$i]."</span>";
 
-
-            if($color['red'] <= 255 && $decRed === false){
-                $color['red'] +=25;
-                
-                if($color['red'] >= 255){
-                    $decRed = true;
+            //for loop to generate a name
+            for ($i=0,$c=strlen($complete);$i<$c;$i++){
+                echo '<span style="color:rgb('.$color['red'].','.$color['green'].','.$color['blue'].')">'.$splitted[$i]."</span>";
+    
+    
+                if($color['red'] <= 230 && $decRed === false){
+                    $color['red'] +=$power;
+                    
+                    if($color['red'] >= 230){
+                        $decRed = true;
+                    }
+                }else if($color['red'] >= 0 && $decRed === true){
+                    $color['red'] -=$power;
+                    if($color['red'] <= 0){
+                        $decRed = false;
+                    }
                 }
-            }else if($color['red'] >= 0 && $decRed === true){
-                $color['red'] -=25;
-                if($color['red'] <= 0){
-                    $decRed = false;
+    
+    
+                if($color['green'] <= 230 && $decGreen === false){
+                    $color['green'] +=$power;
+                    
+                    if($color['green'] >= 230){
+                        $decGreen = true;
+                    }
+                }else if($color['green'] >= 50 && $decGreen === true){
+                    $color['green'] -=$power;
+                    if($color['green'] <= 50){
+                        $decGreen = false;
+                    }
+                }
+    
+    
+                if($color['blue'] <= 230 && $decBlue === false){
+                    $color['blue'] +=$power;
+                    
+                    if($color['blue'] >= 230){
+                        $decBlue = true;
+                    }
+                }else if($color['blue'] >= 50 && $decBlue === true){
+                    $color['blue'] -=$power;
+                    if($color['blue'] <= 50){
+                        $decBlue = false;
+                    }
                 }
             }
-            $gradient .= $splitted[$i];
+
         }
+       
 
     }
 
@@ -167,8 +203,8 @@
 
             <div class="card w-100">
                     <div class="card-body text-white text-center">
-                    <h5 class="card-title">Randomizely make the letters uppercased.</h5>
-                    <p class="card-text"><?php echo $gradient;?></p>
+                    <h5 class="card-title">Create a gradient map for each letter.</h5>
+                    <p class="card-text"><?php generateNameGradient();?></p>
                     </div>
                 </div>
 
